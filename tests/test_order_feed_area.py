@@ -17,7 +17,8 @@ class TestOrderFeed:
         main_page.click_on_order_feed_link()
         order_page = OrderFeedPage(driver)
         order_page.click_on_order()
-        order_page.check_order_modal_window_is_visible()
+
+        assert order_page.check_order_modal_window_is_visible(), 'Modal window disabled'
 
     @allure.title("User's orders displayed in order feed")
     @allure.description("Orders from the user's order history are displayed in the order feed")
@@ -27,9 +28,12 @@ class TestOrderFeed:
         personal_acc = PersonalAccountPage(driver)
         personal_acc.click_on_order_history_btn()
         order_page = OrderFeedPage(driver)
-        order_page.get_user_orders_on_history_page(get_order_number)
+        history_of_orders = order_page.get_user_orders_on_history_page(get_order_number)
         main_page.click_on_order_feed_link()
-        order_page.check_user_orders_in_order_feed(get_order_number)
+
+        with allure.step('Checking the display of user orders in the order feed'):
+            assert history_of_orders in order_page.get_orders_number_in_order_feed(), \
+                'User orders are not displayed in the Order Feed'
 
     @allure.title('Check order count after making a new order')
     @allure.description('When creating a new order, the counter increases')
@@ -42,7 +46,9 @@ class TestOrderFeed:
         data = create_new_user_by_api
         order_page.create_new_order(data[1].json()["accessToken"])
         present_num = order_page.get_orders_counter_value(counter)
-        order_page.checking_the_increase_num_of_orders(previous_num, present_num)
+
+        with allure.step('Checking the increase in the order counter after creating a new order'):
+            assert present_num > previous_num, 'The number of orders has not changed'
 
     @allure.title('Check orders in progress')
     @allure.description('After placing an order, its number appears in the In progress section')
@@ -52,4 +58,6 @@ class TestOrderFeed:
         order_page = OrderFeedPage(driver)
         new_order = order_page.get_user_orders(get_order_number)
         order_in_progress = order_page.get_user_order_in_progress(new_order)
-        order_page.checking_num_of_a_new_order_and_an_order_in_progress(new_order, order_in_progress)
+
+        with allure.step('Checking the display of the leg order in the section in progress'):
+            assert new_order == order_in_progress, 'Order numbers do not match'

@@ -50,8 +50,12 @@ class BasePage:
         return self.wait.until(ec.url_contains(text))
 
     @allure.step('Focus on element')
-    def focus_on_element(self, locator, attribute, text):
-        return self.wait.until(ec.text_to_be_present_in_element_attribute(locator, attribute, text))
+    def focus_on_element(self, locator, text):
+        return self.wait.until(ec.text_to_be_present_in_element_attribute(locator, 'class', text))
+    #
+    # @allure.step('Focus on element')
+    # def focus_on_element(self, locator, attribute, text):
+    #     return self.wait.until(ec.text_to_be_present_in_element_attribute(locator, attribute, text))
 
     @allure.step('')
     def drag_and_drop(self, source, target):

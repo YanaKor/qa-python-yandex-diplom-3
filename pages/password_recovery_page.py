@@ -33,17 +33,12 @@ class PasswordRecoveryPage(BasePage):
 
     @allure.step('Checking focus on a password field')
     def checking_focus_on_password_field(self):
-        assert self.focus_on_element(PRL.FOCUSED_FIELD, 'class', PRL.FOCUSED_TEXT), \
-            'The field is not active. it is impossible to see the value'
+        return self.focus_on_element(PRL.FOCUSED_FIELD, PRL.FOCUSED_TEXT)
 
     @allure.step('Checking the transition to the password recovery page')
     def check_transition_to_recovery_form(self):
-        assert self.get_current_url() == Urls.RECOVERY_PAGE, \
-            'The page link is not what you expected. ' \
-            f'Expected {Urls.RECOVERY_PAGE}, but got {self.get_current_url()}'
+        return self.get_current_url() == Urls.RECOVERY_PAGE
 
     @allure.step('Checking the transition to the password reset page')
     def check_transition_to_reset_password_page(self):
-        assert self.checking_text_in_current_url(Urls.RESET_PASSWORD_PAGE), \
-            'The page link is not what you expected. ' \
-            f'Expected {Urls.RESET_PASSWORD_PAGE}, but got {self.get_current_url()}'
+        return self.checking_text_in_current_url(Urls.RESET_PASSWORD_PAGE)

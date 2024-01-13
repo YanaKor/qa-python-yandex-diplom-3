@@ -50,20 +50,24 @@ class MainPage(BasePage):
 
     @allure.step('Checking the activity of the constructor page')
     def check_constructor_is_active(self):
-        self.focus_on_element(MPL.CONSTRUCTOR_BUTTON, 'class', MPL.FOCUSED_TEXT)
+        return self.focus_on_element(MPL.CONSTRUCTOR_BUTTON, MPL.FOCUSED_TEXT)
 
     @allure.step('Checking the activity of the order feed page')
     def check_order_feed_is_active(self):
-        self.focus_on_element(MPL.ORDER_FEED_BUTTON, 'class', MPL.FOCUSED_TEXT)
+        return self.focus_on_element(MPL.ORDER_FEED_BUTTON, MPL.FOCUSED_TEXT)
 
     @allure.step('Checking if a modal window is open')
     def check_modal_window_is_open(self):
-        self.modal_window_is_open(MPL.MODAL_WINDOW)
+        return self.modal_window_is_open(MPL.MODAL_WINDOW)
 
     @allure.step('Check if a modal window is closed')
     def check_modal_window_is_closed(self):
         return self.element_is_invisible(MPL.MODAL_WINDOW)
 
-    @allure.step('Checking the ingredient quantity counter change')
-    def check_ingredient_counter(self, count_before, count_after):
-        assert count_after > count_before, 'The number of ingredients has not changed'
+    @allure.step('Checking transition to the constructor page')
+    def get_constructor_url(self):
+        return self.checking_text_in_current_url(f'{Urls.BASE_URL}/')
+
+    @allure.step('Checking transition to the order feed page')
+    def get_order_feed_url(self):
+        return self.checking_text_in_current_url(f'{Urls.BASE_URL}/feed')

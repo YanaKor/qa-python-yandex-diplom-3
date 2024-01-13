@@ -3,7 +3,7 @@ import pytest
 
 from pages.password_recovery_page import PasswordRecoveryPage
 from pages.main_page import MainPage
-from base.locators import MainPageLocators as MPL
+from base.locators import MainPageLocators as MPL, Urls
 
 
 @allure.suite('Test recovery form')
@@ -16,7 +16,10 @@ class TestRecoveryForm:
         recovery_page = PasswordRecoveryPage(driver)
         recovery_page.open_recovery_form()
         recovery_page.click_on_recovery_form_link()
-        recovery_page.check_transition_to_recovery_form()
+
+        assert recovery_page.check_transition_to_recovery_form(), \
+            'The page link is not what you expected. ' \
+            f'Expected {Urls.RECOVERY_PAGE}, but got {recovery_page.get_current_url()}'
 
     @allure.title('Checking fill email and click on recovering button ')
     @allure.description('Checking fill email field and click on recovering button.'
@@ -29,7 +32,10 @@ class TestRecoveryForm:
         recovery_page.click_on_recovery_form_link()
         recovery_page.fill_email_field()
         recovery_page.click_recovery_btn()
-        recovery_page.check_transition_to_reset_password_page()
+
+        assert recovery_page.check_transition_to_reset_password_page(), \
+            'The page link is not what you expected. ' \
+            f'Expected {Urls.RESET_PASSWORD_PAGE}, but got {recovery_page.get_current_url()}'
 
     @allure.title('Click on eye button')
     @allure.description('Clicking on eye button in password field. '
@@ -43,4 +49,6 @@ class TestRecoveryForm:
         recovery_page.fill_email_field()
         recovery_page.click_recovery_btn()
         recovery_page.clicking_on_eye_btn()
-        recovery_page.checking_focus_on_password_field()
+
+        assert recovery_page.checking_focus_on_password_field(), \
+            'The field is not active. it is impossible to see the value'

@@ -53,17 +53,5 @@ class OrderFeedPage(BasePage):
 
     @allure.step('Check order modal window is visible')
     def check_order_modal_window_is_visible(self):
-        assert self.modal_window_is_open(OFL.MODAL_ORDER_WINDOW), 'Modal window disabled'
+        return self.modal_window_is_open(OFL.MODAL_ORDER_WINDOW)
 
-    @allure.step('Checking the display of user orders in the order feed')
-    def check_user_orders_in_order_feed(self, orders):
-        assert self.get_user_orders_on_history_page(orders) in self.get_orders_number_in_order_feed(), \
-            'User orders are not displayed in the Order Feed'
-
-    @allure.step('Checking the increase in the order counter after creating a new order')
-    def checking_the_increase_num_of_orders(self, previous_num, present_num):
-        assert present_num > previous_num, 'The number of orders has not changed'
-
-    @allure.step('Checking the display of the leg order in the section in progress')
-    def checking_num_of_a_new_order_and_an_order_in_progress(self, new_order, order_in_progress):
-        assert new_order == order_in_progress, 'Order numbers do not match'

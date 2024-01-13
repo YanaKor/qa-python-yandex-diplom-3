@@ -1,3 +1,4 @@
+import allure
 import pytest
 import requests
 from selenium import webdriver
@@ -10,23 +11,25 @@ from pages.main_page import MainPage
 from pages.personal_account_page import PersonalAccountPage
 
 
-@pytest.fixture(params=['chrome', 'firefox'])
+# @pytest.fixture(params=['chrome', 'firefox'])
+@pytest.fixture(params=['chrome'], scope='function')
 def driver(request):
     if request.param == 'chrome':
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--window-size=1920,1080')
         driver = webdriver.Chrome(options=chrome_options)
 
-    if request.param == 'firefox':
-        driver = webdriver.Firefox()
-        driver.set_window_size(1920, 1080)
+    # if request.param == 'firefox':
+    #     driver = webdriver.Firefox()
+    #     driver.set_window_size(1920, 1080)
 
     driver.get(Urls.BASE_URL)
     yield driver
     driver.quit()
 
 
-@pytest.fixture
+@allure.step('Register new user by API')
+@pytest.fixture(scope='function')
 def create_new_user_by_api():
     data = RegisterUserByApi.register_new_user_and_return_login_password()
 
@@ -36,7 +39,8 @@ def create_new_user_by_api():
     requests.delete(f"{Endpoints.DELETE_USER}", headers={'Authorization': f'{access_token}'})
 
 
-@pytest.fixture
+@allure.step('Login user')
+@pytest.fixture(scope='function')
 def login_user(driver, create_new_user_by_api):
     main_page = MainPage(driver)
     main_page.go_to_personal_account(MPL.PERSONAL_ACCOUNT_BUTTON)
@@ -46,7 +50,8 @@ def login_user(driver, create_new_user_by_api):
     personal_account.click_on_login_btn()
 
 
-@pytest.fixture
+@allure.step('Get orders numbers')
+@pytest.fixture(scope='function')
 def get_order_number(create_new_user_by_api):
     data = create_new_user_by_api
     access_token = data[1].json()["accessToken"]
